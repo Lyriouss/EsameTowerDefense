@@ -2088,7 +2088,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   status: 0
   turretSelected: 0
-  startingMoney: 50
+  startingMoney: 5
   currentMoney: 0
   maxHealth: 100
   currentHealth: 0
@@ -4374,6 +4374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a371616d423fee4a9f72f3959c78c3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  turretSpawns: {fileID: 912142636}
   inGameUI: {fileID: 1227266908}
   pauseMenu: {fileID: 1565536922}
   gameOver: {fileID: 1043235276}
@@ -4856,8 +4857,9 @@ MonoBehaviour:
   - {fileID: 8593521026797640222, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
   - {fileID: 4045067088895449894, guid: 7221e3f5dac959f4c97f6727e284c76a, type: 3}
   spawnRate: 2
-  changeRate: 0.2
-  minRate: 0.5
+  changeSpawnRate: 0.2
+  minSpawnRate: 0.5
+  changeHealthEvery: 20
   healthMult: 1
 --- !u!1 &1447400427
 GameObject:

@@ -7,17 +7,20 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private List<GameObject> enemyPrefabs;
     private List<Transform> spawnPositions;
-
+    
+    //Spawn rate and health change variables
     [SerializeField] private float spawnRate;
     private float spawnTimer;
     private int spawnCount;
-    [SerializeField] private float changeRate;
-    [SerializeField] private float minRate;
+    [SerializeField] private float changeSpawnRate;
+    [SerializeField] private float minSpawnRate;
+    [SerializeField] private int changeHealthEvery;
     public int healthMult;
 
     private int randomPosition;
     private int randomEnemy;
 
+    //Singleton initialization
     private void Awake()
     {
         if (Instance != null)
@@ -39,6 +42,7 @@ public class EnemySpawner : MonoBehaviour
             spawnPositions.Add(child);
         }
 
+        //Sets healthMult to 1
         healthMult = 1;
     }
 
@@ -74,34 +78,38 @@ public class EnemySpawner : MonoBehaviour
         //spawnCount += 1
         spawnCount++;
 
-        //The function stops if spawnCount doesn't reach 10
-        if (spawnCount % 10 == 0 && spawnRate != minRate)
+        //Everytime spawnCount reaches a multiplier of 10 and is not already at minSpawnRate
+        if (spawnCount % 10 == 0 && spawnRate != minSpawnRate)
         {
+            //Highers the rate at which enemies spawn
             ChangeRate();
         }
 
-        if (spawnCount % 20 == 0)
+        //Everytime spawnCount reaches a multiplier of changeHealthEvery
+        if (spawnCount % changeHealthEvery == 0)
         {
+            //Changes the health amount enemies spawn with
             ChangeHealth();
         }
     }
 
     private void ChangeRate()
     {
-        //If spawnRate is lower or equal to minRate, the function stops
-        if (spawnRate < minRate)
+        //If spawnRate equal to minSpawnRate, the function stops
+        if (spawnRate == minSpawnRate)
             return;
 
         //Lowers spawnRate based on changeRate value
-        spawnRate -= changeRate;
+        spawnRate -= changeSpawnRate;
 
-        //If spawnRate goes lower than minRate, sets spawnRate to minRate
-        if (spawnRate < minRate)
-            spawnRate = minRate;
+        //If spawnRate goes lower than minSpawnRate, sets spawnRate to minSpawnRate
+        if (spawnRate < minSpawnRate)
+            spawnRate = minSpawnRate;
     }
 
     private void ChangeHealth()
     {
-        healthMult *= 2;
+        //Adds 1 to healthMult
+        healthMult++;
     }
 }

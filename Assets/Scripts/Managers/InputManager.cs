@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        //Calls PauseGame function in GameManager when pauseKey is pressed
         if (!Input.GetKeyDown(pauseKey))
             return;
 

@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
     private float minutes;
     private float seconds;
 
+    //Runs said function when invoked, primarily from GameManager
     private void OnEnable()
     {
         GameManager.OnTurretSelected += UpdateTurretTxt;
@@ -54,25 +55,31 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        //Gets the amount of transforms in TurretSpawn children
         foreach (Transform child in turretSpawns)
         {
             turretsUntilDisable++;
         }
 
+        //Sets the timer to 0
         timer = 0f;
         minutes = 0f;
         seconds = 0f;
 
+        //Updates the UI of money and health
         UpdateMoney(GameManager.Instance.startingMoney);
         UpdateHealth(1f);
 
+        //When scene is loaded, only inGameUI will be active
         inGameUI.SetActive(true);
         pauseMenu.SetActive(false);
         gameOver.SetActive(false);
 
+        //No text in selected turret text
         selectedTurretTxt.text = null;
     }
 
+    //Only timer will run in Update
     private void Update()
     {
         Timer();
@@ -80,20 +87,22 @@ public class UIManager : MonoBehaviour
 
     private void Timer()
     {
+        //+1f every second
         timer += Time.deltaTime;
 
-        //convert seconds into minutes (every 60 in a minute rounded by defect
+        //Convert seconds into minutes (every 60 in a minute rounded by defect
         minutes = Mathf.Floor(timer / 60);
 
-        //returns the rest of the timer / 60 rounded to the nearest integer
+        //Returns the rest of the timer / 60 rounded to the nearest integer
         seconds = Mathf.FloorToInt(timer % 60);
 
-        //get a model string and its values withing the brackets are placeholders for elements inserted later
+        //Get a model string and its values withing the brackets are placeholders for elements inserted later
         timerTxt.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     private void UpdateTurretTxt()
     {
+        //Updates selectedTurretTxt relative to TurretSelected enum in GameManager when interacted with in UI
         switch (GameManager.Instance.turretSelected)
         {
             case TurretSelected.NormalTurret:
@@ -113,32 +122,38 @@ public class UIManager : MonoBehaviour
 
     private void UpdateMoney(int currentMoney)
     {
+        //Updates money in UI and checks whether a Turret can be placed or not
         moneyTxt.text = "€ " + currentMoney.ToString();
-
         TurretPlacementCheck();
     }
 
     private void CheckTurretCount(int turretsPlaced)
     {
+        //When turrets placed reaches the total turret spawn positions
         if (turretsPlaced >= turretsUntilDisable)
         {
+            //Deactivate all turret button interacts
             normalTurretBtn.interactable = false;
             machineGunTurretBtn.interactable = false;
             areaTurretBtn.interactable = false;
+            //And removes text of selected turret
             selectedTurretTxt.text = null;
         }
     }
 
     private void UpdateKillTally(int killCount)
     {
+        //Updates killTally in UI
         killTallyTxt.text = "Kills: " + killCount.ToString();
     }
 
     private void UpdateHealth(float fillValue)
     {
+        //Updates health bar amount
         healthFill.fillAmount = fillValue;
     }
 
+    //If a turret cannot be placed because there is not enough money, deactivates turret button interact
     private void TurretPlacementCheck()
     {
         if (GameManager.Instance.currentMoney < 5)
@@ -159,11 +174,13 @@ public class UIManager : MonoBehaviour
 
     private void PauseGame()
     {
-        if (GameManager.Instance.status == GameStatus.GameRunning)
+        //Activates pause menu when paused
+        if (GameManager.Instance.status == GameStatus.GamePaused)
         {
             pauseMenu.SetActive(true);
         }
-        else if (GameManager.Instance.status == GameStatus.GamePaused)
+        //Deactivates pause menu when running
+        else if (GameManager.Instance.status == GameStatus.GameRunning)
         {
             pauseMenu.SetActive(false);
         }
@@ -171,9 +188,11 @@ public class UIManager : MonoBehaviour
 
     private void GameOver()
     {
+        //Deactivates inGameUI and activates game over menu
         inGameUI.SetActive(false);
         gameOver.SetActive(true);
 
+        //Shows how long game lasted and how many enemies were killed
         timeStamp.text = timerTxt.text;
         killTally.text = "You Kept out: " + GameManager.Instance.killCount.ToString() + " Foggiani";
     }

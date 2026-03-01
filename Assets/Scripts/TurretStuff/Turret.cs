@@ -1,17 +1,19 @@
 using System;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
+//Abstract parent class of child turret scripts
 public abstract class Turret : MonoBehaviour
 {
-    [SerializeField] Transform turretBody;
+    //Variables for reading enemy to target (+ UI text)
     public TMP_Text upgradeCostUI;
+    [SerializeField] Transform turretBody;
     [SerializeField] LayerMask enemy;
     private Transform playerBase;
     private float lowestDistance;
     private Transform targetEnemy;
 
+    //Variables that determine how to turret behaves
     [Header("Turret Characteristic")]
     public float bulletRate;
     private float bulletTimer;
@@ -20,6 +22,7 @@ public abstract class Turret : MonoBehaviour
     public float speed;
     public int upgradeCost;
 
+    //Variables for spawning a bullet
     [Header("Generate Bullet Elements")]
     [SerializeField] private GameObject bulletType;
     [SerializeField] private Transform head;
@@ -27,19 +30,24 @@ public abstract class Turret : MonoBehaviour
     public static event Action<int> OnStart;
     public static event Action OnTurretPlacement;
 
+    //Delegate so children classes can call it as opposed to event Action
     public delegate void OnUpgradeTurret(int cost);
     public static OnUpgradeTurret onUpgradeTurret;
 
     public virtual void Start()
     {
+        //When spawned, deducts money from GameManager relative to it's placement cost (aka first upgradeCost)
         OnStart?.Invoke(-upgradeCost);
+        //Then adds 1 to total turrets placed in GameManager
         OnTurretPlacement?.Invoke();
 
+        //Sets timer to 0
         bulletTimer = 0f;
 
-        //Finds GameObject in Hierarchy with name then assign Transform as a variable
+        //Finds GameObject in Hierarchy with name then assign it's Transform to a variable
         playerBase = GameObject.Find("PlayerBase").GetComponent<Transform>();
 
+        //Sets upgradeCost as a text on top of turret
         upgradeCostUI.text = upgradeCost.ToString();
     }
 
@@ -48,8 +56,8 @@ public abstract class Turret : MonoBehaviour
         //Timer that goes up 1f every second
         bulletTimer += Time.deltaTime;
 
-        //Return if timer hasn't reached turret bulletRate yet
-        if (bulletTimer < bulletRate)
+        //Shoots a bullet only when timer reaches or exceeds bulletRate
+        if (bulletTimer <= bulletRate)
             return;
 
         EnemyClosestToBase();
@@ -59,12 +67,18 @@ public abstract class Turret : MonoBehaviour
 
     private void EnemyClosestToBase()
     {
+        //Before getting enemy target, resets targetEnemy to null
+        targetEnemy = null;
+
         //Creates OverlapSphere around turret the size of it's range and only detects enemies
         Collider[] enemyPos = Physics.OverlapSphere(head.position, range, enemy);
 
+        //If the overlap sphere doesn't detect enemies, return function
+        //Allows there to be no delay to turret shot when an enemy enters Overlap after turret being inactive
         if (enemyPos.Length == 0)
             return;
 
+        //Sets timer back to 0
         bulletTimer = 0f;
         //Sets the distance to a number larger than the distance from playerBase to enemySpawn
         lowestDistance = 50f;
@@ -80,7 +94,7 @@ public abstract class Turret : MonoBehaviour
             {
                 //Sets the distance of this Collider as the lowestDistance
                 lowestDistance = distance;
-                //Then assigns the target of the turret to this Collider
+                //Then assigns the target of the turret to this enemy
                 targetEnemy = enemy.transform;
             }
         }
@@ -98,7 +112,7 @@ public abstract class Turret : MonoBehaviour
         //Sets the turret to face toward enemy target
         turretBody.transform.forward = direction;
 
-        //Spawns bullet from barrel and instantiates in an empty game object
+        //Spawns bullet at turret head
         Instantiate(bulletType, head.position, head.rotation, transform);
     }
 

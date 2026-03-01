@@ -1,5 +1,4 @@
-using UnityEngine;
-
+//Interface used on enemies
 public interface IDamageable
 {
     public void TakeDamage(int damage);

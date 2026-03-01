@@ -22,8 +22,7 @@ public class GameManager : MonoBehaviour
     public GameStatus status;
     public TurretSelected turretSelected;
 
-    //[SerializeField] GameObject turretSpawns;
-
+    //Event Actions for running functions, primarily in UIManager
     public static event Action OnTurretSelected;
     public static event Action<int> OnMoneyChanged;
     public static event Action<int> OnKillCountChanged;
@@ -32,6 +31,7 @@ public class GameManager : MonoBehaviour
     public static event Action OnGamePaused;
     public static event Action OnGameOver;
 
+    //Money and player health variables (+ amount of turrets on level)
     public int startingMoney;
     [HideInInspector] public int currentMoney;
     [SerializeField] private float maxHealth;
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int killCount;
     private int turretsPlaced;
 
-
+    //Runs said function when invoked from other classes
     private void OnEnable()
     {
         Turret.OnStart += UpdateMoney;
@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         InputManager.OnGamePaused -= PauseGame;
     }
 
+    //Singleton initialization
     private void Awake()
     {
         if (Instance != null)
@@ -74,21 +75,26 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        //Sets enums
         status = GameStatus.GameRunning;
         turretSelected = TurretSelected.NoSelect;
 
+        //Sets money and player health
         currentHealth = maxHealth;
         currentMoney = startingMoney;
     }
 
     private void Update()
     {
+        //Based on GameStatus enum, will run or freeze the game
         if (status == GameStatus.GameRunning)
             Time.timeScale = 1;
         else
             Time.timeScale = 0;
     }
 
+    //Functions when selecting turret option from UI Buttons
+    #region
     public void NormalSelect()
     {
         turretSelected = TurretSelected.NormalTurret;
@@ -112,68 +118,76 @@ public class GameManager : MonoBehaviour
         turretSelected = TurretSelected.NoSelect;
         OnTurretSelected?.Invoke();
     }
+    #endregion
 
-    //public void DeleteSelect()
-    //{
-    //    turretSelected = TurretSelected.DeleteTurret;
-        
-
-    //}
-
+    //Changes value of variable and calls function in UIManager to change text
+    #region
+    //Changes current money
     public void UpdateMoney(int enemyMoney)
     {
         currentMoney += enemyMoney;
         OnMoneyChanged?.Invoke(currentMoney);
     }
 
-    public void UpdateTurretCount()
-    {
-        turretsPlaced++;
-        OnTurretCountChanged?.Invoke(turretsPlaced);
-    }
-
+    //Changes kill count
     public void UpdateKillCount()
     {
         killCount++;
         OnKillCountChanged?.Invoke(killCount);
     }
 
+    //Changes turrets placed
+    public void UpdateTurretCount()
+    {
+        turretsPlaced++;
+        OnTurretCountChanged?.Invoke(turretsPlaced);
+    }
+    #endregion
+
+    //Deducts health when enemy reaches player base
     private void DamageToBase(float enemyDamage)
     {
         currentHealth -= enemyDamage;
 
+        //When health reaches or goes under 0
         if (currentHealth <= 0)
         {
+            //Runs game over function and paused the game
             OnGameOver?.Invoke();
             status = GameStatus.GamePaused;
             return;
         }
 
+        //Calculates fillValue of health bar before running function
         float fillValue = currentHealth / maxHealth;
+        //Calls function in UIManager to change health bar and passes fillValue as a reference
         OnDamageRecieved?.Invoke(fillValue);
     }
 
     public void PauseGame()
     {
+        //Pause or Resume game (based on current enum value) and call function for pause menu UIManager
         if (status == GameStatus.GameRunning)
         {
-            OnGamePaused?.Invoke();
             status = GameStatus.GamePaused;
+            OnGamePaused?.Invoke();
         }
         else if (status == GameStatus.GamePaused)
         {
-            OnGamePaused?.Invoke();
             status = GameStatus.GameRunning;
+            OnGamePaused?.Invoke();
         }
     }
 
     public void ReloadScene()
     {
+        //Reloads current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ReturnToMenu()
     {
+        //Loads MainMenu scene
         SceneManager.LoadScene(0);
     }
 }

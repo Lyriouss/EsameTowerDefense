@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     Rigidbody rb;
 
+    //Variables that determine how enemy behaves
     [SerializeField] private float moveSpeed;
     [SerializeField] private float maxHealth;
     [SerializeField] public float currentHealth;
@@ -13,9 +14,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public static event Action<int> OnEnemyKilled;
     public static event Action OnKillAdded;
-    //public delegate void OnEnemyKilled(int money);
-    //public static OnEnemyKilled onEnemyKilled;
-
     public static event Action<float> OnBaseReached;
 
     private Vector3 direction;
@@ -27,6 +25,7 @@ public class Enemy : MonoBehaviour, IDamageable
         //Sets the movement direction of enemy from right to left
         direction = new Vector3(-1, 0, 0);
 
+        //Gets healthMult from EnemySpawner and multiplies it to enemy health 
         currentHealth = maxHealth * EnemySpawner.Instance.healthMult;
     }
 
@@ -36,14 +35,15 @@ public class Enemy : MonoBehaviour, IDamageable
         rb.linearVelocity = direction * moveSpeed * Time.fixedDeltaTime;
     }
 
+    //Interface function that damages enemy when bullet hits it
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log("Took Damage");
     }
 
     public void Despawn()
     {
+        //Updates variables in GameManager when health reaches 0 or lower and despawns enemy
         OnEnemyKilled?.Invoke(killMoney);
         OnKillAdded?.Invoke();
         Destroy(gameObject);
@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter(Collider other)
     {
+        //When enemy reaches base, deal damage to player base then dwspawns enemy
         if (other.CompareTag("Base"))
         {
             OnBaseReached?.Invoke(damageToBase);

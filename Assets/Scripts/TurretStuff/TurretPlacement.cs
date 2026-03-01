@@ -1,16 +1,34 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class TurretPlacement : MonoBehaviour
+public class TurretPlacement : MonoBehaviour, IPointerClickHandler
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] GameObject[] turretTypes;
+    [SerializeField] Material occupiedMat;
+
+    private void PlaceTurret()
     {
-        
+        switch (GameManager.Instance.turretSelected)
+        {
+            case TurretSelected.NormalTurret:
+                Instantiate(turretTypes[0], transform.position, Quaternion.identity);
+                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
+                break;
+            case TurretSelected.MachineGunTurret:
+                Instantiate(turretTypes[1], transform.position, Quaternion.identity);
+                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
+                break;
+            case TurretSelected.AreaTurret:
+                Instantiate(turretTypes[2], transform.position, Quaternion.identity);
+                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
+                break;
+            case TurretSelected.NoSelect:
+                break;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        
+        PlaceTurret();
     }
 }

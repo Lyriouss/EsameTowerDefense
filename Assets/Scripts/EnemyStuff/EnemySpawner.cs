@@ -3,19 +3,30 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner Instance;
+
     [SerializeField] private List<GameObject> enemyPrefabs;
     private List<Transform> spawnPositions;
 
     [SerializeField] private float spawnRate;
     private float spawnTimer;
-
-    [SerializeField] private int spawnsUntilChange;
     private int spawnCount;
     [SerializeField] private float changeRate;
     [SerializeField] private float minRate;
+    public int healthMult;
 
     private int randomPosition;
     private int randomEnemy;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -27,6 +38,8 @@ public class EnemySpawner : MonoBehaviour
         {
             spawnPositions.Add(child);
         }
+
+        healthMult = 1;
     }
 
     private void Update()
@@ -56,21 +69,21 @@ public class EnemySpawner : MonoBehaviour
         Instantiate(enemyPrefabs[randomEnemy], 
                     spawnPositions[randomPosition].position, 
                     Quaternion.identity, 
-                    spawnPositions[randomPosition]);
+                    transform);
 
         //spawnCount += 1
         spawnCount++;
 
-        //The function stops if spawnCount doesn't reach the value of spawnsUntilChange
-        if (spawnCount < spawnsUntilChange)
-            return;
+        //The function stops if spawnCount doesn't reach 10
+        if (spawnCount % 10 == 0 && spawnRate != minRate)
+        {
+            ChangeRate();
+        }
 
-        //When spawnCount reaches spawnsUntilChange
-        //sets spawnCount back to zero and continues the function
-        spawnCount = 0;
-
-        //Calls ChangeRate function
-        ChangeRate();
+        if (spawnCount % 20 == 0)
+        {
+            ChangeHealth();
+        }
     }
 
     private void ChangeRate()
@@ -85,5 +98,10 @@ public class EnemySpawner : MonoBehaviour
         //If spawnRate goes lower than minRate, sets spawnRate to minRate
         if (spawnRate < minRate)
             spawnRate = minRate;
+    }
+
+    private void ChangeHealth()
+    {
+        healthMult *= 2;
     }
 }

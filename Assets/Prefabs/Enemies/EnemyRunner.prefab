@@ -61,16 +61,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5687318586895578559, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
+      propertyPath: killMoney
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687318586895578559, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
       propertyPath: maxHealth
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5687318586895578559, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
       propertyPath: moveSpeed
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5687318586895578559, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
       propertyPath: damageToBase
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8593521026797640222, guid: a09c6a87967931e46a9cc9cf12520214, type: 3}
       propertyPath: m_Name

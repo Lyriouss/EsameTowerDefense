@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button normalTurretBtn;
     [SerializeField] private Button machineGunTurretBtn;
     [SerializeField] private Button areaTurretBtn;
+    [SerializeField] private Button sniperTurretBtn;
     [SerializeField] private TMP_Text selectedTurretTxt;
 
     [Header("Game Over Elements")]
@@ -114,6 +116,12 @@ public class UIManager : MonoBehaviour
             case TurretSelected.AreaTurret:
                 selectedTurretTxt.text = "Selected: Area Turret";
                 break;
+            case TurretSelected.SniperTurret:
+                selectedTurretTxt.text = "Selected: Sniper Turret";
+                break;
+            case TurretSelected.DeleteTurret:
+                selectedTurretTxt.text = "Selected: Delete Turret";
+                break;
             case TurretSelected.NoSelect:
                 selectedTurretTxt.text = null;
                 break;
@@ -170,6 +178,11 @@ public class UIManager : MonoBehaviour
             areaTurretBtn.interactable = false;
         else
             areaTurretBtn.interactable = true;
+
+        if (GameManager.Instance.currentMoney < 20)
+            sniperTurretBtn.interactable = false;
+        else
+            sniperTurretBtn.interactable = true;
     }
 
     private void PauseGame()

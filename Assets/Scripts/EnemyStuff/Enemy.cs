@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public static event Action<int> OnEnemyKilled;
     public static event Action OnKillAdded;
     public static event Action<float> OnBaseReached;
+    public static event Action<int> OnMoneyStolen;
 
     private Vector3 direction;
 
@@ -51,10 +52,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter(Collider other)
     {
-        //When enemy reaches base, deal damage to player base then dwspawns enemy
+        //When enemy reaches base
         if (other.CompareTag("Base"))
         {
+            //deal damage to player base
             OnBaseReached?.Invoke(damageToBase);
+            //steals money from player
+            OnMoneyStolen?.Invoke(-killMoney);
+            //then despawns enemy
             Destroy(gameObject);
         }
     }

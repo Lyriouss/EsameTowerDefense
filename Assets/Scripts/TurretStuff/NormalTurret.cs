@@ -18,6 +18,10 @@ public class NormalTurret : Turret, IPointerClickHandler
 
     private void Upgrade()
     {
+        //Clicking on turret destroys it when Delete button is selected in UI
+        if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)
+            Destroy(gameObject);
+
         //Runs only when current money is higher or equal to upgradeCost and hasn't reached max upgrade
         if (GameManager.Instance.currentMoney < upgradeCost || upgradeCount >= 5)
             return;

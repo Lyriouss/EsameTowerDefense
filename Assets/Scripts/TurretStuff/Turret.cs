@@ -12,6 +12,10 @@ public abstract class Turret : MonoBehaviour
     private Transform playerBase;
     private float lowestDistance;
     private Transform targetEnemy;
+    //Material for material change when Delete Select is active or not
+    [SerializeField] GameObject objChangeMat;
+    [SerializeField] Material normalMat;
+    [SerializeField] Material deleteMat;
 
     //Variables that determine how to turret behaves
     [Header("Turret Characteristic")]
@@ -33,6 +37,16 @@ public abstract class Turret : MonoBehaviour
     //Delegate so children classes can call it as opposed to event Action
     public delegate void OnUpgradeTurret(int cost);
     public static OnUpgradeTurret onUpgradeTurret;
+
+    public void OnEnable()
+    {
+        GameManager.OnTurretSelected += ChangePositionMaterial;
+    }
+
+    public void OnDisable()
+    {
+        GameManager.OnTurretSelected -= ChangePositionMaterial;
+    }
 
     public virtual void Start()
     {
@@ -114,6 +128,19 @@ public abstract class Turret : MonoBehaviour
 
         //Spawns bullet at turret head
         Instantiate(bulletType, head.position, head.rotation, transform);
+    }
+
+    private void ChangePositionMaterial()
+    {
+        //Changes material only when Delete Select is active or deactivated
+        if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)
+        {
+            objChangeMat.GetComponent<MeshRenderer>().material = deleteMat;
+        }
+        else
+        {
+            objChangeMat.GetComponent<MeshRenderer>().material = normalMat;
+        }
     }
 
     private void OnDrawGizmos()

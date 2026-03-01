@@ -16,19 +16,31 @@ public class TurretPlacement : MonoBehaviour, IPointerClickHandler
             //Order of turrets in array must be in this order to function properly
             //example: spawns Area Turret when placed at element 0 after selecting Normal Turret from UI
             case TurretSelected.NormalTurret:
+                //Checks if there is enough money to place
+                if (GameManager.Instance.currentMoney < 5)
+                    return;
                 //Spawns selected turret on the platform clicked
                 Instantiate(turretTypes[0], transform.position, Quaternion.identity);
-                //Changes material of spawn position
-                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
                 break;
+
             case TurretSelected.MachineGunTurret:
+                if (GameManager.Instance.currentMoney < 10)
+                    return;
                 Instantiate(turretTypes[1], transform.position, Quaternion.identity);
-                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
                 break;
+
             case TurretSelected.AreaTurret:
+                if (GameManager.Instance.currentMoney < 15)
+                    return;
                 Instantiate(turretTypes[2], transform.position, Quaternion.identity);
-                gameObject.GetComponent<MeshRenderer>().material = occupiedMat;
                 break;
+
+            case TurretSelected.SniperTurret:
+                if (GameManager.Instance.currentMoney < 20)
+                    return;
+                Instantiate(turretTypes[3], transform.position, Quaternion.identity);
+                break;
+
             case TurretSelected.NoSelect:
                 break;
         }

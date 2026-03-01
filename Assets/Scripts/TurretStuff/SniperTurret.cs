@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MachineGunTurret : Turret, IPointerClickHandler
+public class SniperTurret : Turret, IPointerClickHandler
 {
-    //Rate changed to bulletRate and min value it can reach
     [Header("Upgrade Values")]
-    [SerializeField] private float changeRate;
-    [SerializeField] private float minRate;
+    [SerializeField] private float rangeIncrease;
     [SerializeField] private int damageIncrease;
 
     private int upgradeCount;
@@ -23,7 +21,7 @@ public class MachineGunTurret : Turret, IPointerClickHandler
         base.Update();
     }
 
-    public void Upgrade()
+    private void Upgrade()
     {
         //Clicking on turret destroys it when Delete button is selected in UI
         if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)
@@ -33,15 +31,8 @@ public class MachineGunTurret : Turret, IPointerClickHandler
         if (GameManager.Instance.currentMoney < upgradeCost || upgradeCount >= 5)
             return;
 
-        //If bulletRate after subtraction doesn't go lower than minRate
-        if (bulletRate - changeRate >= minRate)
-            //Lowers bulletRate equal to changeRate
-            bulletRate -= changeRate;
-        //Else when going lower, makes bulletRate equal to minRate
-        else  
-            bulletRate = minRate;
-
-        //Increased damage
+        //Damage and range are increased
+        range += rangeIncrease;
         damage += damageIncrease;
 
         //Deducts money equal to upgradeCost from GameManager
@@ -56,7 +47,7 @@ public class MachineGunTurret : Turret, IPointerClickHandler
         if (upgradeCount < 5)
             //Updates the next upgrade cost text
             upgradeCostUI.text = upgradeCost.ToString();
-        //Else when reaching 5, changes upgrade cost text to "MAX"
+        //else when reaching 5, changes upgrade cost text to "MAX"
         else
             upgradeCostUI.text = "MAX";
     }

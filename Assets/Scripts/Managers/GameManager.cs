@@ -13,7 +13,9 @@ public enum TurretSelected
     NoSelect,
     NormalTurret,
     MachineGunTurret,
-    AreaTurret
+    AreaTurret,
+    SniperTurret,
+    DeleteTurret
 }
 
 public class GameManager : MonoBehaviour
@@ -31,13 +33,16 @@ public class GameManager : MonoBehaviour
     public static event Action OnGamePaused;
     public static event Action OnGameOver;
 
-    //Money and player health variables (+ amount of turrets on level)
+    //Money and player health variables
     public int startingMoney;
     [HideInInspector] public int currentMoney;
     [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
     [HideInInspector] public int killCount;
+
+    //Turret placement variables
     private int turretsPlaced;
+    [SerializeField] private GameObject turretSpawns;
 
     //Runs said function when invoked from other classes
     private void OnEnable()
@@ -48,6 +53,7 @@ public class GameManager : MonoBehaviour
         Enemy.OnEnemyKilled += UpdateMoney;
         Enemy.OnKillAdded += UpdateKillCount;
         Enemy.OnBaseReached += DamageToBase;
+        Enemy.OnMoneyStolen += UpdateMoney;
         InputManager.OnGamePaused += PauseGame;
     }
 
@@ -59,6 +65,7 @@ public class GameManager : MonoBehaviour
         Enemy.OnEnemyKilled -= UpdateMoney;
         Enemy.OnKillAdded -= UpdateKillCount;
         Enemy.OnBaseReached -= DamageToBase;
+        Enemy.OnMoneyStolen -= UpdateMoney;
         InputManager.OnGamePaused -= PauseGame;
     }
 
@@ -99,24 +106,42 @@ public class GameManager : MonoBehaviour
     {
         turretSelected = TurretSelected.NormalTurret;
         OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(true);
     }
 
     public void MachineGunSelect()
     {
         turretSelected = TurretSelected.MachineGunTurret;
         OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(true);
     }
 
     public void AreaSelect()
     {
         turretSelected = TurretSelected.AreaTurret;
         OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(true);
+    }
+
+    public void SniperSelect()
+    {
+        turretSelected = TurretSelected.SniperTurret;
+        OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(true);
     }
 
     public void Unselect()
     {
         turretSelected = TurretSelected.NoSelect;
         OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(true);
+    }
+
+    public void DeleteSelect()
+    {
+        turretSelected = TurretSelected.DeleteTurret;
+        OnTurretSelected?.Invoke();
+        turretSpawns.SetActive(false);
     }
     #endregion
 
@@ -125,8 +150,17 @@ public class GameManager : MonoBehaviour
     //Changes current money
     public void UpdateMoney(int enemyMoney)
     {
-        currentMoney += enemyMoney;
-        OnMoneyChanged?.Invoke(currentMoney);
+        //Allows currentMoney to never go below 0
+        if (currentMoney + enemyMoney <= 0)
+        {
+            currentMoney = 0;
+            OnMoneyChanged?.Invoke(currentMoney);
+        }
+        else
+        {
+            currentMoney += enemyMoney;
+            OnMoneyChanged?.Invoke(currentMoney);
+        }
     }
 
     //Changes kill count

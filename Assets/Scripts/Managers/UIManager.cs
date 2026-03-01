@@ -32,6 +32,8 @@ public class UIManager : MonoBehaviour
     private float minutes;
     private float seconds;
 
+    private bool maxTurrets;
+
     //Runs said function when invoked, primarily from GameManager
     private void OnEnable()
     {
@@ -144,9 +146,44 @@ public class UIManager : MonoBehaviour
             normalTurretBtn.interactable = false;
             machineGunTurretBtn.interactable = false;
             areaTurretBtn.interactable = false;
-            //And removes text of selected turret
-            selectedTurretTxt.text = null;
+            sniperTurretBtn.interactable = false;
+            //And sets turret select to no selection
+            GameManager.Instance.turretSelected = TurretSelected.NoSelect;
+            UpdateTurretTxt();
+
+            maxTurrets = true;
         }
+        //Else doesn't deactivate buttons and checks what can be placed
+        else
+        {
+            maxTurrets = false;
+            TurretPlacementCheck();
+        }
+    }
+
+    //If a turret cannot be placed because there is not enough money or there aren't any placement spaces
+    //deactivates turret button interact
+    private void TurretPlacementCheck()
+    {
+        if (GameManager.Instance.currentMoney < 5 || maxTurrets)
+            normalTurretBtn.interactable = false;
+        else
+            normalTurretBtn.interactable = true;
+
+        if (GameManager.Instance.currentMoney < 10 || maxTurrets)
+            machineGunTurretBtn.interactable = false;
+        else
+            machineGunTurretBtn.interactable = true;
+
+        if (GameManager.Instance.currentMoney < 15 || maxTurrets)
+            areaTurretBtn.interactable = false;
+        else
+            areaTurretBtn.interactable = true;
+
+        if (GameManager.Instance.currentMoney < 20 || maxTurrets)
+            sniperTurretBtn.interactable = false;
+        else
+            sniperTurretBtn.interactable = true;
     }
 
     private void UpdateKillTally(int killCount)
@@ -159,30 +196,6 @@ public class UIManager : MonoBehaviour
     {
         //Updates health bar amount
         healthFill.fillAmount = fillValue;
-    }
-
-    //If a turret cannot be placed because there is not enough money, deactivates turret button interact
-    private void TurretPlacementCheck()
-    {
-        if (GameManager.Instance.currentMoney < 5)
-            normalTurretBtn.interactable = false;
-        else
-            normalTurretBtn.interactable = true;
-
-        if (GameManager.Instance.currentMoney < 10)
-            machineGunTurretBtn.interactable = false;
-        else
-            machineGunTurretBtn.interactable = true;
-
-        if (GameManager.Instance.currentMoney < 15)
-            areaTurretBtn.interactable = false;
-        else
-            areaTurretBtn.interactable = true;
-
-        if (GameManager.Instance.currentMoney < 20)
-            sniperTurretBtn.interactable = false;
-        else
-            sniperTurretBtn.interactable = true;
     }
 
     private void PauseGame()

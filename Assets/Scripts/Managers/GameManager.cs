@@ -26,12 +26,9 @@ public class GameManager : MonoBehaviour
 
     //Event Actions for running functions, primarily in UIManager
     public static event Action OnTurretSelected;
-    public static event Action<int> OnMoneyChanged;
-    public static event Action<int> OnKillCountChanged;
-    public static event Action<int> OnTurretCountChanged;
+    public static event Action<int> OnMoneyChanged, OnKillCountChanged, OnTurretCountChanged;
     public static event Action<float> OnDamageRecieved;
-    public static event Action OnGamePaused;
-    public static event Action OnGameOver;
+    public static event Action OnGamePaused, OnGameOver;
 
     //Money and player health variables
     public int startingMoney;
@@ -41,7 +38,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int killCount;
 
     //Turret placement variables
-    private int turretsPlaced;
+    [SerializeField] private int turretsPlaced;
     [SerializeField] private GameObject turretSpawns;
 
     //Runs said function when invoked from other classes
@@ -49,6 +46,7 @@ public class GameManager : MonoBehaviour
     {
         Turret.OnStart += UpdateMoney;
         Turret.OnTurretPlacement += UpdateTurretCount;
+        Turret.onTurretDestroyed += UpdateTurretCount;
         Turret.onUpgradeTurret += UpdateMoney;
         Enemy.OnEnemyKilled += UpdateMoney;
         Enemy.OnKillAdded += UpdateKillCount;
@@ -61,6 +59,7 @@ public class GameManager : MonoBehaviour
     {
         Turret.OnStart -= UpdateMoney;
         Turret.OnTurretPlacement -= UpdateTurretCount;
+        Turret.onTurretDestroyed -= UpdateTurretCount;
         Turret.onUpgradeTurret -= UpdateMoney;
         Enemy.OnEnemyKilled -= UpdateMoney;
         Enemy.OnKillAdded -= UpdateKillCount;
@@ -171,9 +170,9 @@ public class GameManager : MonoBehaviour
     }
 
     //Changes turrets placed
-    public void UpdateTurretCount()
+    public void UpdateTurretCount(int valueChange)
     {
-        turretsPlaced++;
+        turretsPlaced += valueChange;
         OnTurretCountChanged?.Invoke(turretsPlaced);
     }
     #endregion

@@ -27,7 +27,10 @@ public class AreaTurret : Turret, IPointerClickHandler
     {
         //Clicking on turret destroys it when Delete button is selected in UI
         if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)
+        {
+
             Destroy(gameObject);
+        }
 
         //Runs only when current money is higher or equal to upgradeCost and hasn't reached max upgrade
         if (GameManager.Instance.currentMoney < upgradeCost || upgradeCount >= 5)
@@ -52,6 +55,12 @@ public class AreaTurret : Turret, IPointerClickHandler
         //else when reaching 5, changes upgrade cost text to "MAX"
         else
             upgradeCostUI.text = "MAX";
+    }
+
+    //Lowers turret count by 1 when destroyed
+    private void OnDestroy()
+    {
+        onTurretDestroyed?.Invoke(-1);
     }
 
     //Runs function on game object with this script when clicking it's collider

@@ -2222,7 +2222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   status: 0
   turretSelected: 0
-  startingMoney: 20
+  startingMoney: 100
   currentMoney: 0
   maxHealth: 100
   currentHealth: 0

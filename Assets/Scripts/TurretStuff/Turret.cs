@@ -31,13 +31,14 @@ public abstract class Turret : MonoBehaviour
     [SerializeField] private GameObject bulletType;
     [SerializeField] private Transform head;
 
-    public static event Action<int> OnStart, OnTurretPlacement;
+    public static event Action<int> OnStart;
+    public static event Action OnTurretPlacement;
 
     //Delegate so children classes can call it as opposed to event Action
     public delegate void OnUpgradeTurret(int cost);
-    public static OnUpgradeTurret onUpgradeTurret;
+    public static OnUpgradeTurret onTurretClicked;
 
-    public delegate void OnTurretDestroyed(int valueChange);
+    public delegate void OnTurretDestroyed();
     public static OnTurretDestroyed onTurretDestroyed;
 
     public void OnEnable()
@@ -53,7 +54,7 @@ public abstract class Turret : MonoBehaviour
     public virtual void Start()
     {
         //Adds 1 to total turrets placed in GameManager
-        OnTurretPlacement?.Invoke(1);
+        OnTurretPlacement?.Invoke();
         //When spawned, deducts money from GameManager relative to it's placement cost (aka first upgradeCost)
         OnStart?.Invoke(-upgradeCost);
 

@@ -2222,11 +2222,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   status: 0
   turretSelected: 0
-  startingMoney: 100
+  startingMoney: 20
   currentMoney: 0
   maxHealth: 100
   currentHealth: 0
   killCount: 0
+  turretsPlaced: 0
   turretSpawns: {fileID: 912142635}
 --- !u!4 &648824134
 Transform:

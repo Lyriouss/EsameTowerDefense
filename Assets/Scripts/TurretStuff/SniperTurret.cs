@@ -27,6 +27,7 @@ public class SniperTurret : Turret, IPointerClickHandler
         if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)
         {
             Destroy(gameObject);
+            return;
         }
 
         //Runs only when current money is higher or equal to upgradeCost and hasn't reached max upgrade
@@ -38,7 +39,7 @@ public class SniperTurret : Turret, IPointerClickHandler
         damage += damageIncrease;
 
         //Deducts money equal to upgradeCost from GameManager
-        onUpgradeTurret?.Invoke(-upgradeCost);
+        onTurretClicked?.Invoke(-upgradeCost);
 
         //Doubles the upgradeCost of turret
         upgradeCost *= 2;
@@ -57,7 +58,7 @@ public class SniperTurret : Turret, IPointerClickHandler
     //Lowers turret count by 1 when destroyed
     private void OnDestroy()
     {
-        onTurretDestroyed?.Invoke(-1);
+        onTurretDestroyed?.Invoke();
     }
 
     //Runs function on game object with this script when clicking it's collider

@@ -45,9 +45,9 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         Turret.OnStart += UpdateMoney;
-        Turret.OnTurretPlacement += UpdateTurretCount;
-        Turret.onTurretDestroyed += UpdateTurretCount;
-        Turret.onUpgradeTurret += UpdateMoney;
+        Turret.OnTurretPlacement += UpdateTurretPlaced;
+        Turret.onTurretDestroyed += UpdateTurretDestroy;
+        Turret.onTurretClicked += UpdateMoney;
         Enemy.OnEnemyKilled += UpdateMoney;
         Enemy.OnKillAdded += UpdateKillCount;
         Enemy.OnBaseReached += DamageToBase;
@@ -58,9 +58,9 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         Turret.OnStart -= UpdateMoney;
-        Turret.OnTurretPlacement -= UpdateTurretCount;
-        Turret.onTurretDestroyed -= UpdateTurretCount;
-        Turret.onUpgradeTurret -= UpdateMoney;
+        Turret.OnTurretPlacement -= UpdateTurretPlaced;
+        Turret.onTurretDestroyed -= UpdateTurretDestroy;
+        Turret.onTurretClicked -= UpdateMoney;
         Enemy.OnEnemyKilled -= UpdateMoney;
         Enemy.OnKillAdded -= UpdateKillCount;
         Enemy.OnBaseReached -= DamageToBase;
@@ -170,9 +170,15 @@ public class GameManager : MonoBehaviour
     }
 
     //Changes turrets placed
-    public void UpdateTurretCount(int valueChange)
+    public void UpdateTurretPlaced()
     {
-        turretsPlaced += valueChange;
+        turretsPlaced++;
+        OnTurretCountChanged?.Invoke(turretsPlaced);
+    }
+
+    public void UpdateTurretDestroy()
+    {
+        turretsPlaced--;
         OnTurretCountChanged?.Invoke(turretsPlaced);
     }
     #endregion

@@ -89,7 +89,7 @@ public class EnemySpawner : MonoBehaviour
         if (spawnCount % changeHealthEvery == 0)
         {
             //Changes the health amount enemies spawn with
-            ChangeHealth();
+            healthMult++;
         }
     }
 
@@ -105,11 +105,5 @@ public class EnemySpawner : MonoBehaviour
         //If spawnRate goes lower than minSpawnRate, sets spawnRate to minSpawnRate
         if (spawnRate < minSpawnRate)
             spawnRate = minSpawnRate;
-    }
-
-    private void ChangeHealth()
-    {
-        //Adds 1 to healthMult
-        healthMult++;
     }
 }

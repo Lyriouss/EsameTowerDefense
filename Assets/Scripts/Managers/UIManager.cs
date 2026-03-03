@@ -220,6 +220,6 @@ public class UIManager : MonoBehaviour
 
         //Shows how long game lasted and how many enemies were killed
         timeStamp.text = timerTxt.text;
-        killTally.text = "You Kept out: " + GameManager.Instance.killCount.ToString() + " Foggiani";
+        killTally.text = "You Killed: " + GameManager.Instance.killCount.ToString() + " Enemies";
     }
 }

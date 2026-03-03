@@ -4,7 +4,6 @@
 
 Extra features added that were not requested to exam
 
-* Title of Game added to Main Menu (you said we could add anything ;p)
 * Turret Aiming: Turrets will target enemies inside it's range and primarily target enemy closest to player base.
 * Extra Upgrade Stat: Machine Gun and Area Turrets upgrade also increases damage by a certain amount on top of Machine Gun Turret's rate of fire and Area Turret's bullet area.
 * Added Upgrade Limit: Turrets can only be upgraded a total of 5 times until they reach MAX level.

@@ -1,6 +1,6 @@
 using UnityEngine.EventSystems;
 
-public class NormalTurret : Turret, IPointerClickHandler
+public class NormalTurret : Turret, IUpgradeable, IPointerClickHandler
 {
     private int upgradeCount;
 
@@ -16,7 +16,7 @@ public class NormalTurret : Turret, IPointerClickHandler
         base.Update();
     }
 
-    private void Upgrade()
+    public void Upgrade()
     {
         //Clicking on turret destroys it when Delete button is selected in UI
         if (GameManager.Instance.turretSelected == TurretSelected.DeleteTurret)

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MachineGunTurret : Turret, IPointerClickHandler
+public class MachineGunTurret : Turret, IUpgradeable, IPointerClickHandler
 {
     //Rate changed to bulletRate and min value it can reach
     [Header("Upgrade Values")]
